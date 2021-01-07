@@ -2,9 +2,9 @@ package main
 
 import (
 	"bytes"
+	"delay/Help"
 	"fmt"
 	"net/http"
-	"regexp"
 	"strconv"
 	"time"
 )
@@ -34,24 +34,18 @@ func Handler(res http.ResponseWriter, req *http.Request) {
 		return;
 	}
 
-	regSecond := `/(\d+)`;
-	matched, err := regexp.MatchString(regSecond, path);
-
-	if err != nil || !matched  {
-		BadRequst(res);
-		return;
-	}
-
-	re, err := regexp.Compile(regSecond);
+	delay, err := Help.GetSecond(path);
+	
 	if err != nil {
 		fmt.Println(err);
+		res.Write([]byte(err.Error()));
 		return;
 	}
-	match := re.FindAllStringSubmatch(path, -1);
-	delay, _ := strconv.ParseInt(match[0][1], 10, 64);
-	fmt.Println(path, delay, time.Duration(delay / 1000) * time.Second) 
+
+	fmt.Println(path, delay, time.Duration(delay / 1000) * time.Second);
 	<- time.Tick(time.Duration(delay / 1000) * time.Second);
-	res.Write([]byte(match[0][1]));	
+
+	res.Write([]byte(strconv.FormatInt(delay, 10)));	
 }
 
 func main() {
