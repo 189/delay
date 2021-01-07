@@ -48,7 +48,8 @@ func Handler(res http.ResponseWriter, req *http.Request) {
 		return;
 	}
 	match := re.FindAllStringSubmatch(path, -1);
-	delay, _ := strconv.ParseInt(match[0][1], 10, 64); 
+	delay, _ := strconv.ParseInt(match[0][1], 10, 64);
+	fmt.Println(path, delay, time.Duration(delay / 1000) * time.Second) 
 	<- time.Tick(time.Duration(delay / 1000) * time.Second);
 	res.Write([]byte(match[0][1]));	
 }
