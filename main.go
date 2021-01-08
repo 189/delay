@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func BadRequst(res http.ResponseWriter) {
+func BadRequst(res http.ResponseWriter, tip ...string) {
 	var bytes bytes.Buffer;
 	content := `
 			Bad Request !
@@ -21,6 +21,11 @@ func BadRequst(res http.ResponseWriter) {
 			will got response after 6 second
 		`;
 		bytes.WriteString(content);
+		
+		if len(tip) == 1 {
+			bytes.Write([]byte("<br />"));
+			bytes.WriteString(tip[0]);
+		}
 		res.Write(bytes.Bytes());
 }
 
