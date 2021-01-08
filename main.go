@@ -14,9 +14,9 @@ func BadRequst(res http.ResponseWriter) {
 	content := `
 			Bad Request !
 			<br />
-			Request Schema is /:millisecond
+			Request Schema is /:second
 			<br />
-			eg. /6000
+			eg. /6
 			<br />
 			will got response after 6 second
 		`;
@@ -42,13 +42,17 @@ func Handler(res http.ResponseWriter, req *http.Request) {
 		return;
 	}
 
-	fmt.Println(path, delay, time.Duration(delay / 1000) * time.Second);
-	<- time.Tick(time.Duration(delay / 1000) * time.Second);
+	fmt.Println(path, delay, time.Duration(delay) * time.Second);
+	<- time.Tick(time.Duration(delay) * time.Second);
 
-	res.Write([]byte(strconv.FormatInt(delay, 10)));	
+	res.Write([]byte(strconv.FormatInt(delay, 10)));
 }
 
 func main() {
 	http.HandleFunc("/", Handler);
 	http.ListenAndServe(":6001", nil);
+	// start := time.Now();
+	// fmt.Println(start);
+	// t := <-time.Tick(0 * time.Second);
+	// fmt.Println(t, "\n", start.Sub(time.Now()))
 }
